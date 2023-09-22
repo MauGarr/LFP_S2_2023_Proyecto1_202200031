@@ -1,66 +1,82 @@
-
 from tkinter import *
-from PIL import ImageTk, Image
+from tkinter import Menu, filedialog
 from tkinter import messagebox
-from tkinter.filedialog import askopenfilename
 
-# Crear la ventana
-ventana = Tk()
+# Funciones para las opciones del menú Archivo
+def abrir_archivo():
+    archivo = filedialog.askopenfilename(
+        initialdir= "./",
+        filetypes = (
+            ("Archivos JSON", "*.json"),
+            ("Todos los archivos",  "*.*")
+        )
+    )
+    
+    if archivo:
+        with open(archivo, 'r', encoding='utf-8') as file:
+            texto.delete(1.0, END)
+            texto.insert(END, file.read())
 
-ventana.title("Menú")
-ventana.iconbitmap("spiderman.ico")
-ventana.geometry("650x350")
-ventana.resizable(True, True)
+def guardar_archivo():
+    archivo = filedialog.asksaveasfilename(defaultextension=".json")
+    if archivo:
+        with open(archivo, 'w') as file:
+            file.write(texto.get(1.0, END))
 
-#Creando el menu
-menu = Menu(ventana)
-ventana.config(menu=menu, bg= "light blue")
-
-def cargar_archivo():
-    filename = askopenfilename()
-    img = Image.open(filename)
-    new_img = img.resize((300, 200))
-    render = ImageTk.PhotoImage(new_img)
-    img1 = Label(ventana, image = render)
-    img1.image = render
-    img1.place(x=400, y=210)
+def guardar_como_archivo():
+    archivo = filedialog.asksaveasfilename(defaultextension=".json")
+    if archivo:
+        with open(archivo, 'w') as file:
+            file.write(texto.get(1.0, END))
 
 def salir():
     salir = messagebox.askquestion("Salir", "¿Desea salir del programa?")
     if salir == 'yes':
         ventana.quit()
 
-Archivo = Menu(menu, tearoff = 0)
-Archivo.add_command(label = "Abrir", command = cargar_archivo)
-Archivo.add_command(label = "Guardar")
-Archivo.add_command(label = "Guardar como")
-Archivo.add_separator()
-Archivo.add_command(label = "Salir", command = salir)
+# Función para mostrar el menú Archivo
+def mostrar_menu_archivo(event):
+    menu_archivo.post(event.x_root, event.y_root)
 
+# Crea la ventana principal
+ventana = Tk()
+ventana.title("Analizador Léxico")
+ventana.iconbitmap("spiderman.ico")
+ventana.geometry("600x400")
 
-Analizar = Menu(menu, tearoff = 0)
+# Crea el marco azul en la parte superior donde se encuentran los botones
+marco_superior = Frame(ventana, bg="blue", height=10)
+marco_superior.pack(fill="x")
 
-Errores = Menu(menu, tearoff = 0)
-Reporte = Menu(menu, tearoff = 0)
+# Crea el área de trabajo con fondo blanco
+texto = Text(ventana, bg="white")
+texto.pack(pady=15, padx= 15, fill="both", expand=True)
 
-menu.add_cascade(label = "Archivo", menu = Archivo)
-menu.add_cascade(label = "Analizar", menu = Analizar)
-menu.add_cascade(label = "Errores", menu = Errores)
-menu.add_cascade(label = "Reporte", menu = Reporte)
+# Crea el menú para la opción Archivo
+menu_archivo = Menu(ventana, tearoff= 0)
+menu_archivo.add_command(label="Abrir", command=abrir_archivo)
+menu_archivo.add_command(label="Guardar", command=guardar_archivo)
+menu_archivo.add_command(label="Guardar como", command=guardar_como_archivo)
+menu_archivo.add_separator()
+menu_archivo.add_command(label="Salir", command=salir)
+menu_archivo.config(background= "black", foreground= "white", font=("Arial", 11, "italic"))
 
-# Ejecutar la ventana
+# Creando el menú con botones
+boton_archivo = Button(marco_superior, text="Archivo", bg="black", fg="white", font=("Arial", 11))
+boton_archivo.pack(side="left", padx=10, pady=5)
+boton_archivo.bind("<Button-1>", mostrar_menu_archivo)   
+
+boton_analizar = Button(marco_superior, text="Analizar", bg="black", fg="white", font=("Arial", 11))
+boton_analizar.pack(side="left", padx=11, pady=5)
+
+boton_Errores = Button(marco_superior, text="Errores", bg="black", fg="white", font=("Arial", 11))
+boton_Errores.pack(side="left", padx=12, pady=5)
+
+boton_Reporte = Button(marco_superior, text="Reporte", bg="black", fg="white", font=("Arial", 11))
+boton_Reporte.pack(side="left", padx=13, pady=5)
+
+# Ejecuta la ventana
 ventana.mainloop()
-
-
-
-
-
-
-
-# Botón de menu
-# btn_menu= Button(ventana, text="Continuar", font = ("Courier", 14), bg = "white", fg = "black", command=verificar_credenciales)
-# btn_menu.pack()
-
 
 
 

@@ -4,26 +4,34 @@ from math import *
 class Trigonometrica(Expression):
 
     def __init__(self, left, tipo, fila, columna):
-        super().__init__(fila, columna)
         self.left = left
         self.tipo = tipo
+        super().__init__(fila, columna)
 
-    def operar(self, arbol):  
-        leffValue = ''
+    def operar(self, arbol):
+        leftValue = ''
         if self.left != None:
-            leffValue = self.left.operar(arbol)
+            leftValue = self.left.operar(arbol)
 
-        if self.tipo.operar(arbol) == 'seno' or 'Seno':
-            return sin(leffValue)
-        elif self.tipo.operar(arbol) == 'coseno' or 'Coseno':
-            return cos(leffValue)
-        elif self.tipo.operar(arbol) == 'tangente' or 'Tangente':
-            return tan(leffValue)
+        operacion = self.tipo.operar(arbol)
+
+        if operacion == 'Inverso' or operacion == 'inverso':
+            resultados = round(1/leftValue,2)
+            return resultados
+        elif operacion == 'Seno' or operacion == 'seno':
+            resultados = round(sin(radians(leftValue)), 2)
+            return resultados
+        elif operacion == 'Coseno' or operacion == 'coseno':
+            resultados = round(cos(radians(leftValue)), 2)
+            return resultados
+        elif operacion == 'Tangente' or operacion == 'tangente':
+            resultados = round(tan(radians(leftValue)), 2)
+            return resultados
         else:
-            return None
-        
+            return None            
+    
     def getFila(self):
         return super().getFila()
-
+    
     def getColumna(self):
-        return super().getColumna()
+        return super().getColumna()    

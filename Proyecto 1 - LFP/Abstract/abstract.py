@@ -17,6 +17,3 @@ class Expression(ABC):
     @abstractmethod
     def getColumna(self):
         return self.columna
-
-
-
